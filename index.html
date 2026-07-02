@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>神兽刷新终端 · V1.1 升级完整版</title>
+    <style>
+        /* ===== CSS 变量（双皮肤） ===== */
+        :root {
+            --bg-primary: #0a0d1a;
+            --bg-secondary: #10182b;
+            --bg-panel: #0c1424;
+            --bg-input: #060c18;
+            --bg-item: #0a1220;
+            --border-color: #1e3050;
+            --border-light: #162030;
+            --text-primary: #c8d8f0;
+            --text-secondary: #5a7a9a;
+            --text-accent: #6ee8b8;
+            --text-gold: #f0d07a;
+            --text-dim: #3a5a6a;
+            --shadow-glow: rgba(0, 255, 200, 0.06);
+            --btn-bg: #1a8a6a;
+            --btn-hover: #2aa87a;
+            --btn-shadow: rgba(26, 138, 106, 0.2);
+            --tab-active: #4af0b0;
+            --filter-active-bg: #1a4a3a;
+            --filter-active-border: #4af0b0;
+            --card-border-left: #2a6a6a;
+            --boss-gold: #f0d07a;
+            --za-color: #d0a050;
+            --scrollbar-track: #0a1220;
+            --scrollbar-thumb: #1a3a4a;
+            --scrollbar-thumb-hover: #2a5a6a;
+            --badge-bg: #1a2a3a;
+            --panel-border: #162030;
+            --time-tag-bg: #141c2a;
+            --time-tag-color: #8a7a5a;
+            --font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            --border-radius: 28px;
+        }
+        [data-theme="light"] {
+            --bg-primary: #f0f4fa;
+            --bg-secondary: #ffffff;
+            --bg-panel: #f5f8fc;
+            --bg-input: #e8edf5;
+            --bg-item: #eef2f8;
+            --border-color: #b0c8e0;
+            --border-light: #d0dce8;
+            --text-primary: #1a2a3a;
+            --text-secondary: #4a6a8a;
+            --text-accent: #1a8a6a;
+            --text-gold: #b09040;
+            --text-dim: #6a8aaa;
+            --shadow-glow: rgba(0, 0, 0, 0.04);
+            --btn-bg: #1a8a6a;
+            --btn-hover: #2aa87a;
+            --btn-shadow: rgba(26, 138, 106, 0.15);
+            --tab-active: #1a8a6a;
+            --filter-active-bg: #d0e8e0;
+            --filter-active-border: #1a8a6a;
+            --card-border-left: #4a9a8a;
+            --boss-gold: #b09040;
+            --za-color: #a08840;
+            --scrollbar-track: #e8ecf0;
+            --scrollbar-thumb: #b0c8d8;
+            --scrollbar-thumb-hover: #90a8b8;
+            --badge-bg: #dce4ec;
+            --panel-border: #d0dce8;
+            --time-tag-bg: #e8ecf0;
+            --time-tag-color: #5a7a6a;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: var(--font-family);
+            min-height: 100vh;
+            padding: 12px;
+            display: flex;
+            justify-content: center;
+            transition: background 0.4s, color 0.4s;
+        }
+        .container {
+            max-width: 1150px;
+            width: 100%;
+            background: var(--bg-secondary);
+            border-radius: var(--border-radius);
+            padding: 20px 18px;
+            box-shadow: 0 0 50px var(--shadow-glow);
+            border: 1px solid var(--border-color);
+            transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 8px;
+            transition: border-color 0.4s;
+        }
+        .header h1 {
+            font-size: clamp(18px, 5vw, 28px);
+            font-weight: 400;
+            letter-spacing: 1px;
+            color: var(--text-accent);
+            text-shadow: 0 0 18px rgba(110, 232, 184, 0.15);
+            transition: color 0.4s, text-shadow 0.4s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+        }
+        .header h1 .version {
+            font-size: clamp(10px, 2.5vw, 14px);
+            font-weight: 300;
+            color: var(--text-secondary);
+            margin-left: 4px;
+            letter-spacing: 0;
+            opacity: 0.7;
+        }
+        .header .right-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .header .ver-badge {
+            font-size: clamp(10px, 2vw, 13px);
+            background: var(--badge-bg);
+            padding: 2px 12px;
+            border-radius: 40px;
+            color: var(--text-secondary);
+            border: 1px solid var(--border-light);
+            transition: background 0.4s, color 0.4s, border-color 0.4s;
+            letter-spacing: 0.5px;
+        }
+        .theme-toggle {
+            display: flex;
+            gap: 4px;
+            background: var(--bg-panel);
+            padding: 3px 6px;
+            border-radius: 40px;
+            border: 1px solid var(--border-light);
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .theme-toggle button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 2px 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(11px, 2vw, 13px);
+            transition: 0.2s;
+        }
+        .theme-toggle button.active {
+            background: var(--filter-active-bg);
+            color: var(--text-accent);
+            border: 1px solid var(--filter-active-border);
+        }
+        .font-selector {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .font-selector label { font-size: clamp(10px, 1.8vw, 12px); color: var(--text-secondary); }
+        .font-selector select {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            padding: 2px 8px;
+            border-radius: 30px;
+            font-size: clamp(10px, 1.8vw, 13px);
+            outline: none;
+            cursor: pointer;
+            max-width: 100px;
+        }
+        .main-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+            background: var(--bg-panel);
+            padding: 14px 16px;
+            border-radius: 18px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 20px;
+            align-items: flex-end;
+            transition: background 0.4s, border-color 0.4s;
+        }
+        .main-input .group {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            min-width: 0;
+        }
+        .main-input .group label {
+            font-size: clamp(10px, 2vw, 12px);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+        .main-input .group input {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            padding: 8px 10px;
+            border-radius: 10px;
+            font-size: clamp(14px, 3vw, 17px);
+            outline: none;
+            width: 100%;
+            text-align: center;
+            min-width: 0;
+        }
+        .main-input .group input:focus {
+            border-color: var(--tab-active);
+            box-shadow: 0 0 14px rgba(74, 240, 176, 0.12);
+        }
+        .time-split {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .time-split input { flex: 1; min-width: 36px; }
+        .time-split span { color: var(--text-secondary); font-size: clamp(16px, 3vw, 20px); }
+        .mode-toggle {
+            display: flex;
+            gap: 3px;
+            background: var(--bg-input);
+            border-radius: 30px;
+            padding: 2px;
+            border: 1px solid var(--border-light);
+        }
+        .mode-toggle button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 3px 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(10px, 1.8vw, 12px);
+        }
+        .mode-toggle button.active { background: var(--btn-bg); color: #fff; }
+        .ampm-toggle {
+            display: flex;
+            gap: 3px;
+            background: var(--bg-input);
+            border-radius: 30px;
+            padding: 2px;
+            border: 1px solid var(--border-light);
+            flex-shrink: 0;
+        }
+        .ampm-toggle button {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 3px 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(10px, 1.8vw, 13px);
+        }
+        .ampm-toggle button.active { background: var(--btn-bg); color: #fff; }
+        .ampm-hint {
+            font-size: clamp(10px, 1.6vw, 12px);
+            color: var(--text-accent);
+            background: var(--bg-input);
+            padding: 2px 10px;
+            border-radius: 30px;
+            border: 1px solid var(--border-light);
+            display: none;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .ampm-hint.visible { display: inline-block; }
+        .main-input .btn-group {
+            display: flex;
+            gap:8px;
+            flex-shrink:0;
+        }
+        .main-input .btn {
+            background: var(--btn-bg);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: clamp(14px, 2.5vw, 17px);
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            min-height: 44px;
+            box-shadow: 0 0 24px var(--btn-shadow);
+        }
+        .main-input .btn-clear {
+            background:#303e4e;
+        }
+        .main-input .btn:hover { transform: scale(1.02); }
+        .main-input .hint {
+            font-size: clamp(9px, 1.5vw, 11px);
+            color: var(--text-dim);
+        }
+        .tabs {
+            display: flex;
+            gap: 2px;
+            border-bottom: 2px solid var(--border-light);
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 8px 14px;
+            font-size: clamp(12px, 2.2vw, 15px);
+            font-weight: 600;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+        .tab-btn.active { color: var(--text-accent); border-bottom-color: var(--tab-active); }
+        .tab-content { display: none; animation: fadeUp 0.25s ease; }
+        .tab-content.active { display: block; }
+        @keyframes fadeUp {
+            from { opacity: 0.3; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .sub-tabs {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 8px;
+        }
+        .sub-tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-secondary);
+            padding: 4px 14px;
+            font-size: clamp(11px, 2vw, 14px);
+            border-radius: 20px;
+            cursor: pointer;
+        }
+        .sub-tab-btn.active {
+            color: var(--text-accent);
+            background: var(--filter-active-bg);
+            border: 1px solid var(--filter-active-border);
+        }
+        .sub-content { display: none; }
+        .sub-content.active { display: block; }
+        .search-bar {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 14px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .search-bar input {
+            flex: 1;
+            min-width: 120px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 30px;
+            font-size: clamp(13px, 2.2vw, 15px);
+            outline: none;
+        }
+        .search-bar .count-badge {
+            font-size: clamp(11px, 1.8vw, 13px);
+            color: var(--text-secondary);
+            background: var(--bg-panel);
+            padding: 3px 12px;
+            border-radius: 30px;
+            white-space: nowrap;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 4px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+        .filter-btn {
+            background: var(--bg-item);
+            border: 1px solid var(--border-light);
+            color: var(--text-secondary);
+            padding: 3px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: clamp(11px, 1.6vw, 13px);
+        }
+        .filter-btn.active {
+            background: var(--filter-active-bg);
+            border-color: var(--filter-active-border);
+            color: var(--text-accent);
+        }
+        .panel {
+            background: var(--bg-panel);
+            border-radius: 16px;
+            padding: 14px 16px;
+            border: 1px solid var(--panel-border);
+            margin-bottom: 14px;
+        }
+        .panel-title {
+            font-size: clamp(11px, 1.8vw, 13px);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+            border-bottom: 1px dashed var(--border-light);
+            padding-bottom: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap:8px;
+        }
+        .panel-title .highlight { color: var(--text-accent); }
+        .panel-title .copy-btn {
+            background:var(--filter-active-bg);
+            color:var(--text-accent);
+            border:1px solid var(--filter-active-border);
+            padding:2px 10px;
+            border-radius:20px;
+            cursor:pointer;
+            font-size:12px;
+        }
+        .realtime-display {
+            background: var(--bg-item);
+            border-radius: 14px;
+            padding: 12px 16px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+        .realtime-display .row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px 12px;
+        }
+        .realtime-display .label {
+            font-size: clamp(10px, 1.5vw, 12px);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+        .realtime-display .value {
+            font-size: clamp(16px, 3vw, 20px);
+            font-weight: 600;
+            color: var(--text-accent);
+        }
+        .realtime-display .value.g { color: var(--text-gold); }
+        .realtime-display .countdown {
+            font-size: clamp(13px, 2vw, 16px);
+            color: var(--text-gold);
+        }
+        .realtime-display .countdown span {
+            background: var(--bg-input);
+            padding: 1px 8px;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+        }
+        .pokemon-list {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            width: 100%;
+        }
+        .pokemon-item {
+            font-size: clamp(12px, 1.8vw, 14px);
+            background: var(--bg-item);
+            padding: 4px 12px;
+            border-radius: 24px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: baseline;
+            gap: 3px 10px;
+            position:relative;
+        }
+        .pokemon-item .star {
+            position:absolute;
+            right:10px;
+            top:4px;
+            cursor:pointer;
+            color:#777;
+        }
+        .pokemon-item .star.fav { color:var(--text-gold); }
+        .pokemon-item .name { font-weight: 500; color: var(--text-primary); }
+        .pokemon-item .terrain {
+            font-size: clamp(10px, 1.5vw, 12px);
+            color: var(--text-secondary);
+            background: var(--bg-input);
+            padding: 0 10px;
+            border-radius: 16px;
+        }
+        .pokemon-item .sub { font-size: clamp(10px, 1.4vw, 11px); color: var(--text-accent); }
+        .pokemon-item .time-tag {
+            font-size: clamp(10px, 1.4vw, 11px);
+            color: var(--time-tag-color);
+            background: var(--time-tag-bg);
+            padding: 0 8px;
+            border-radius: 12px;
+        }
+        .empty { color: var(--text-dim); font-style: italic; padding: 6px 0; }
+        .boss-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .boss-card {
+            background: var(--bg-item);
+            padding: 8px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--border-light);
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .boss-card:hover { border-color: var(--text-secondary); background: var(--bg-panel); }
+        .boss-card .bname {
+            font-weight: 600;
+            color: var(--boss-gold);
+            font-size: clamp(13px, 2vw, 15px);
+        }
+        .boss-card .bname .za {
+            color: var(--za-color);
+            font-weight: 400;
+            font-size: clamp(10px, 1.4vw, 12px);
+            margin-right: 4px;
+        }
+        .boss-card .bterrain { font-size: clamp(10px, 1.4vw, 12px); color: var(--text-secondary); }
+        .future-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 6px;
+        }
+        .future-card {
+            background: var(--bg-item);
+            padding: 10px 14px;
+            border-radius: 14px;
+            border-left: 3px solid var(--card-border-left);
+        }
+        .future-card .round { font-size: clamp(10px, 1.5vw, 12px); color: var(--text-secondary); }
+        .future-card .time {
+            font-size: clamp(15px, 2.5vw, 18px);
+            font-weight: 600;
+            color: var(--text-accent);
+        }
+        .future-card .period-tag {
+            font-size: clamp(10px, 1.5vw, 12px);
+            background: var(--bg-panel);
+            padding: 0 10px;
+            border-radius: 12px;
+            display: inline-block;
+            color: var(--text-secondary);
+        }
+        .future-card .count { font-size: clamp(11px, 1.6vw, 13px); color: var(--text-secondary); }
+        .predict-input {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 14px;
+            background: var(--bg-item);
+            padding: 12px 14px;
+            border-radius: 14px;
+            border: 1px solid var(--border-light);
+            margin-bottom: 14px;
+            align-items: flex-end;
+        }
+        .predict-input .group {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            min-width: 0;
+        }
+        .predict-input .group label {
+            font-size: clamp(9px, 1.4vw, 11px);
+            text-transform: uppercase;
+            color: var(--text-secondary);
+        }
+        .predict-input .group input {
+            background: var(--bg-input);
+            border: 1px solid var(--border-light);
+            color: var(--text-primary);
+            padding: 6px 10px;
+            border-radius: 10px;
+            font-size: clamp(13px, 2.2vw, 16px);
+            outline: none;
+            width: 100%;
+            min-width: 0;
+        }
+        .predict-input .btn-sm {
+            background: var(--btn-bg);
+            border: none;
+            color: #fff;
+            font-weight: 600;
+            font-size: clamp(13px, 2vw, 15px);
+            padding: 6px 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            min-height: 38px;
+        }
+        .footer {
+            margin-top: 22px;
+            text-align: center;
+            font-size: clamp(9px, 1.4vw, 11px);
+            color: var(--text-dim);
+            border-top: 1px solid var(--border-light);
+            padding-top: 14px;
+        }
+        @media (max-width: 640px) {
+            .container { padding: 12px 10px; border-radius: 18px; }
+            .main-input { padding: 12px; gap: 8px; }
+            .main-input .group { flex: 1 1 100%; }
+            .main-input .btn-group { width:100%; }
+            .main-input .btn { width:100%; }
+            .predict-input { flex-direction: column; }
+            .predict-input .btn-sm { width: 100%; }
+            .header .right-group { width: 100%; justify-content: flex-start; }
+            .boss-grid { grid-template-columns: 1fr 1fr; }
+            .future-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 420px) {
+            .boss-grid { grid-template-columns: 1fr; }
+            .future-grid { grid-template-columns: 1fr; }
+        }
+        ::-webkit-scrollbar { width: 6px; background: var(--scrollbar-track); }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>
+                ⚡ 神兽刷新终端
+                <span class="version">V1.1 功能升级版</span>
+            </h1>
+            <div class="right-group">
+                <div class="font-selector">
+                    <label>🔤</label>
+                    <select id="fontSelect">
+                        <option value="'Segoe UI','Microsoft YaHei',sans-serif">默认</option>
+                        <option value="'Courier New',monospace">像素</option>
+                        <option value="'Microsoft YaHei',sans-serif">雅黑</option>
+                    </select>
+                </div>
+                <div class="theme-toggle">
+                    <button class="active" data-theme="dark">🌙</button>
+                    <button data-theme="light">☀️</button>
+                </div>
+                <span class="ver-badge">⚡ v1.1</span>
+            </div>
+        </div>
+        <div class="main-input" id="mainInput">
+            <div class="group" style="flex: 0 0 auto;">
+                <label>📅 模式</label>
+                <div class="mode-toggle" id="modeToggle">
+                    <button class="active" data-mode="24h">24h</button>
+                    <button data-mode="12h">12h</button>
+                </div>
+            </div>
+            <div class="group" style="flex: 2 1 180px;">
+                <label id="timeLabel">🕒 当前游戏时间</label>
+                <div class="time-split">
+                    <input type="number" id="mainHour" placeholder="时" min="0" max="23" value="">
+                    <span>:</span>
+                    <input type="number" id="mainMinute" placeholder="分" min="0" max="59" value="">
+                    <div class="ampm-toggle" id="ampmToggle" style="display:none;">
+                        <button class="active" data-ampm="AM">AM</button>
+                        <button data-ampm="PM">PM</button>
+                    </div>
+                    <span class="ampm-hint" id="ampmHint">PM</span>
+                </div>
+            </div>
+            <div class="group" style="flex: 1 1 120px;">
+                <label>⏳ 距下次刷新 (秒)</label>
+                <input type="number" id="mainSeconds" placeholder="秒数">
+                <span class="hint">1秒 = 游戏内1分钟</span>
+            </div>
+            <div class="btn-group">
+                <button class="btn" id="mainBtn">▶ 推算</button>
+                <button class="btn btn-clear" id="clearBtn">清空</button>
+            </div>
+        </div>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="tab-pokemon">📅 神兽</button>
+            <button class="tab-btn" data-tab="tab-mega">⚡ Mega</button>
+            <button class="tab-btn" data-tab="tab-boss">👑 ZA Boss</button>
+            <button class="tab-btn" data-tab="tab-predict">⏩ 预测</button>
+            <button class="tab-btn" data-tab="tab-fav">⭐ 收藏</button>
+        </div>
+        <div id="tab-pokemon" class="tab-content active">
+            <div class="sub-tabs">
+                <button class="sub-tab-btn active" data-sub="high">🔹 高版本</button>
+                <button class="sub-tab-btn" data-sub="low">🔸 低版本</button>
+            </div>
+            <div class="filter-buttons" id="terrainFilter">
+                <button class="filter-btn active" data-terrain="all">全部地形</button>
+                <button class="filter-btn" data-terrain="陆地">陆地</button>
+                <button class="filter-btn" data-terrain="空中">空中</button>
+                <button class="filter-btn" data-terrain="水下">水下</button>
+                <button class="filter-btn" data-terrain="地下">地下</button>
+            </div>
+            <div id="sub-high" class="sub-content active"></div>
+            <div id="sub-low" class="sub-content"></div>
+        </div>
+        <div id="tab-mega" class="tab-content"></div>
+        <div id="tab-boss" class="tab-content"></div>
+        <div id="tab-predict" class="tab-content"></div>
+        <div id="tab-fav" class="tab-content">
+            <div class="panel">
+                <div class="panel-title">⭐ 收藏神兽列表 <span class="copy-btn" id="copyFav">复制全部收藏</span></div>
+                <div id="favList" class="pokemon-list"></div>
+            </div>
+        </div>
+        <div class="footer">时段: 黎明 04:30-06:18 · 上午 06:18-12:00 · 下午 12:00-18:00 · 黄昏 18:00-19:48 · 夜晚 19:48-04:30</div>
+    </div>
+    <script>
+        // 本地存储工具
+        const Storage = {
+            save(key, data) { localStorage.setItem(key, JSON.stringify(data)); },
+            get(key) { let d = localStorage.getItem(key); return d ? JSON.parse(d) : null; }
+        }
+        // 全局状态
+        let globalState = Storage.get('state') || {
+            theme:'dark', fontIndex:0, hour:'', minute:'', sec:'', mode:'24h', ampm:'AM',
+            favList:[]
+        };
+        function saveState(){ Storage.save('state', globalState); }
+        // 时段定义
+        function getPeriod(minutes) {
+            let m = ((minutes % 1440) + 1440) % 1440;
+            if (m >= 4*60+30 && m < 6*60+18) return '黎明';
+            if (m >= 6*60+18 && m < 12*60) return '上午';
+            if (m >= 12*60 && m < 18*60) return '下午';
+            if (m >= 18*60 && m < 19*60+48) return '黄昏';
+            return '夜晚';
+        }
+        function formatMinutes(minutes) {
+            let total = ((minutes % 1440) + 1440) % 1440;
+            let h = Math.floor(total / 60), m = Math.round(total % 60);
+            if(m===60){h=(h+1)%24;m=0;}
+            return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+        }
+        function format12h(minutes) {
+            let total = ((minutes % 1440) + 1440) % 1440;
+            let h = Math.floor(total / 60), m = Math.round(total % 60);
+            if(m===60){h=(h+1)%24;m=0;}
+            let ap = h>=12 ? 'PM':'AM';
+            let h12 = h%12 ||12;
+            return `${h12}:${String(m).padStart(2,'0')} ${ap}`;
+        }
+        function getAmPm(h){return h>=12?'PM':'AM';}
+        function formatRealTime(d){
+            const h=String(d.getHours()).padStart(2,'');
+            const m=String(d.getMinutes()).padStart(2,'');
+            const s=String(d.getSeconds()).padStart(2,'');
+            return `${h}:${m}:${s}`;
+        }
+        function formatCountdown(s){
+            if(s<0)s=0;
+            let h=Math.floor(s/3600),m=Math.floor((s%3600)/60),sec=s%60;
+            if(h>0) return `${h}h ${m}m ${sec}s`;
+            if(m>0) return `${m}m ${sec}s`;
+            return `${sec}s`;
+        }
+        function getInputMinutes(mode,h,ampm){
+            let hr=h;
+            if(mode==='12h'){
+                if(ampm==='PM'&&hr<12)hr+=12;
+                if(ampm==='AM'&&hr===12)hr=0;
+            }
+            return hr*60;
+        }
+        // 精灵数据
+        const POKEMON_DATA_HIGH = [
+            { name: '梦幻', times: ['上午', '下午'], terrain: '陆地' },
+            { name: '雷公', times: ['黎明', '黄昏'], terrain: '陆地' },
+            { name: '炎帝', times: ['上午', '下午'], terrain: '陆地' },
+            { name: '水君', times: ['夜晚'], terrain: '陆地' },
+            { name: '固拉多', times: ['上午', '下午'], terrain: '陆地', special:{type:'weather',desc:'晴朗'} },
+            { name: '盖欧卡', times: ['夜晚'], terrain: '水下', special:{type:'weather',desc:'雨天/雷暴'} },
+            { name: '烈空坐', times: ['黎明', '黄昏', '下午'], terrain: '空中' },
+            { name: '拉帝亚斯', times: ['上午'], terrain: '空中' },
+            { name: '拉帝欧斯', times: ['下午'], terrain: '空中' },
+            { name: '基拉祈', times: ['黎明', '黄昏'], terrain: '陆地' },
+            { name: '雷吉艾斯', times: ['黎明'], terrain: '地下' },
+            { name: '席多蓝恩', times: ['黎明', '上午', '下午', '黄昏', '夜晚'], terrain: '地下' }
+        ];
+        const POKEMON_DATA_LOW = [
+            { name: '梦幻', times: ['上午', '下午'], terrain: '陆地' },
+            { name: '雷公', times: ['黎明', '黄昏'], terrain: '陆地' },
+            { name: '盖欧卡', times: ['夜晚'], terrain: '水下' },
+            { name: '烈空坐', times: ['黎明', '黄昏'], terrain: '空中' },
+            { name: '雷吉艾斯', times: ['上午'], terrain: '地下' }
+        ];
+        const MEGA_DATA = [
+            { name: '超级喷火龙X', times: ['任意'], terrain: '陆地' },
+            { name: '超级烈空坐', times: ['任意'], terrain: '空中' },
+            { name: '超级耿鬼', times: ['夜晚'], terrain: '陆地' }
+        ];
+        const BOSS_DATA = [
+            { name: '快龙', terrain: '水下' },
+            { name: '基格尔德', terrain: '陆地' }
+        ];
+        // 全局变量 实时倒计时定时器
+        let timer = null;
+        let currentSec = 0;
+        // 渲染收藏列表
+        function renderFav(){
+            const wrap = document.getElementById('favList');
+            if(globalState.favList.length===0){
+                wrap.innerHTML = '<span class="empty">暂无收藏，点击精灵右侧☆添加</span>';
+                return;
+            }
+            let html = '';
+            globalState.fav.forEach(n=>{
+                html += `<div class="pokemon-item"><span class="name">${n}</span><span class="star fav" data-name="${n}">★</span></div>`;
+            })
+            wrap.innerHTML = html;
+            wrap.querySelectorAll('.star').forEach(s=>{
+                s.onclick = ()=>{
+                    let name = s.dataset.name;
+                    globalState.favList = globalState.favList.filter(x=>x!==name);
+                    saveState();
+                    renderFav();
+                }
+            })
+        }
+        // 复制文本
+        function copyText(text){
+            navigator.clipboard.writeText(text).then(()=>alert("已复制"));
+        }
+        // 渲染精灵列表 带地形筛选+收藏按钮
+        function renderList(containerId, data, period, terrainFilter='all'){
+            let list = data.filter(item=>item.times.includes(period));
+            if(terrainFilter!=='all') list = list.filter(i=>i.terrain.includes(terrainFilter));
+            let names = list.map(i=>i.name);
+            let text = names.join('\n');
+            let html = `
+                <div class="search-bar">
+                    <input class="search-input" placeholder="搜索精灵">
+                    <span class="count-badge">共${list.length}只</span>
+                    <button class="copy-btn" data-txt="${encodeURIComponent(text)}">复制列表</button>
+                </div>
+                <div class="panel">
+                    <div class="panel-title">当前时段可刷 <span class="highlight">${list.length}</span> 只</div>
+                    <div class="pokemon-list">
+            `;
+            list.forEach(p=>{
+                let isFav = globalState.favList.includes(p.name);
+                html += `
+                <div class="pokemon-item" data-name="${p.name}" data-terrain="${p.terrain}">
+                    <span class="name">${p.name}</span>
+                    <span class="terrain">${p.terrain}</span>
+                    ${p.special?`<span class="sub">${p.special.desc}</span>`:''}
+                    <span class="star ${isFav?'fav':''}" data-name="${p.name}">${isFav?'★':'☆'}</span>
+                </div>`;
+            })
+            html += `</div></div>`;
+            document.getElementById(containerId).innerHTML = html;
+            // 复制按钮
+            document.querySelectorAll('.copy-btn').forEach(btn=>{
+                btn.onclick = ()=>copyText(decodeURIComponent(btn.dataset.txt));
+            })
+            // 收藏点击
+            document.querySelectorAll('.pokemon-item .star').forEach(s=>{
+                s.onclick = (e)=>{
+                    e.stopPropagation();
+                    let n = s.dataset.name;
+                    if(globalState.favList.includes(n)){
+                        globalState.favList = globalState.favList.filter(x=>x!==n);
+                        s.textContent = '☆'; s.classList.remove('fav');
+                    }else{
+                        globalState.favList.push(n);
+                        s.textContent = '★'; s.classList.add('fav');
+                    }
+                    saveState();
+                    renderFav();
+                }
+            })
+            // 搜索
+            document.querySelectorAll('.search-input').forEach(inp=>{
+                inp.oninput = ()=>{
+                    let kw = inp.value.toLowerCase();
+                    inp.closest('.panel').parentNode.querySelectorAll('.pokemon-item').forEach(el=>{
+                        el.style.display = el.dataset.name.toLowerCase().includes(kw) ? 'flex':'none';
+                    })
+                }
+            })
+        }
+        // 主推算+实时倒计时
+        function startCountDown(h, m, secInput, mode, ampm){
+            if(timer) clearInterval(timer);
+            currentSec = secInput;
+            function tick(){
+                if(currentSec <=0){
+                    clearInterval(timer);
+                    return;
+                }
+                currentSec--;
+                document.getElementById('mainSeconds').value = currentSec;
+                runCalc(h, m, currentSec, mode, ampm);
+            }
+            timer = setInterval(tick, 1000);
+            runCalc(h, m, currentSec, mode, ampm);
+        }
+        function runCalc(h, m, sec, mode, ampm){
+            globalState.hour = h; globalState.minute = m; globalState.sec = sec;
+            globalState.mode = mode; globalState.ampm = ampm;
+            saveState();
+            const now = new Date();
+            const refreshTime = new Date(now.getTime() + sec*1000);
+            const curMin = getInputMinutes(mode, h, ampm) + m;
+            const nextMin = (curMin + sec) % 1440;
+            const period = getPeriod(nextMin);
+            const timeStr = mode==='12h' ? format12h(nextMin) : formatMinutes(nextMin);
+            const realHtml = `
+                <div class="realtime-display">
+                    <div class="row">
+                        <span class="label">当前现实</span>
+                        <span class="value">${formatRealTime(now)}</span>
+                        <span class="label">刷新时间</span>
+                        <span class="value g">${formatRealTime(refreshTime)}</span>
+                        <span class="countdown"><span>${formatCountdown(sec)}</span></span>
+                    </div>
+                    <div class="row">
+                        <span class="label">游戏刷新时刻</span>
+                        <span class="value">${timeStr} 【${period}】</span>
+                    </div>
+                </div>`;
+            // 渲染高低版本
+            document.getElementById('sub-high').innerHTML = realHtml;
+            renderList('sub-high', POKEMON_DATA_HIGH, period, getActiveTerrain());
+            document.getElementById('sub-low').innerHTML = realHtml;
+            renderList('sub-low', POKEMON_DATA_LOW, period, getActiveTerrain());
+        }
+        function getActiveTerrain(){
+            let btn = document.querySelector('#terrainFilter .filter-btn.active');
+            return btn.dataset.terrain;
+        }
+        // 初始化UI绑定
+        function initUI(){
+            // 恢复本地存储
+            document.documentElement.setAttribute('data-theme', globalState.theme);
+            document.querySelector(`.theme-toggle button[data-theme="${globalState.theme}"]`).classList.add('active');
+            document.getElementById('mainHour').value = globalState.hour;
+            document.getElementById('mainMinute').value = globalState.minute;
+            document.getElementById('mainSeconds').value = globalState.sec;
+            document.querySelector(`#modeToggle button[data-mode="${globalState.mode}"]`).classList.add('active');
+            document.querySelector(`#ampmToggle button[data-ampm="${globalState.ampm}"]`).classList.add('active');
+            renderFav();
+            // 清空按钮
+            document.getElementById('clearBtn').onclick = ()=>{
+                document.getElementById('mainHour').value = '';
+                document.getElementById('mainMinute').value = '';
+                document.getElementById('mainSeconds').value = '';
+                if(timer) clearInterval(timer);
+                globalState.hour = ''; globalState.minute = ''; globalState.sec = '';
+                saveState();
+                document.getElementById('sub-high').innerHTML = '<div class="panel"><div class="panel-title">请输入时间推算</div></div>';
+                document.getElementById('sub-low').innerHTML = '<div class="panel"><div class="panel-title">请输入时间推算</div></div>';
+            }
+            // 推算按钮
+            document.getElementById('mainBtn').onclick = ()=>{
+                let h = parseInt(document.getElementById('mainHour').value||0);
+                let m = parseInt(document.getElementById('mainMinute').value||0);
+                let s = parseInt(document.getElementById('mainSeconds').value||0);
+                let mode = document.querySelector('#modeToggle .active').dataset.mode;
+                let ampm = document.querySelector('#ampmToggle .active').dataset.ampm;
+                if(isNaN(h)||isNaN(m)||isNaN(s)||s<=0){
+                    alert('请填写完整合法时间');
+                    return;
+                }
+                startCountDown(h,m,s,mode,ampm);
+            }
+            // 地形筛选切换
+            document.querySelectorAll('#terrainFilter .filter-btn').forEach(btn=>{
+                btn.onclick = ()=>{
+                    document.querySelectorAll('#terrainFilter .filter-btn').forEach(b=>b.classList.remove('active'));
+                    btn.classList.add('active');
+                    let h = parseInt(document.getElementById('mainHour').value||0);
+                    let m = parseInt(document.getElementById('mainMinute').value||0);
+                    let s = parseInt(document.getElementById('mainSeconds').value||0);
+                    let mode = document.querySelector('#modeToggle .active').dataset.mode;
+                    let ampm = document.querySelector('#ampmToggle .active').dataset.ampm;
+                    if(!isNaN(h)&&!isNaN(m)&&!isNaN(s)&&s>0){
+                        runCalc(h,m,s,mode,ampm);
+                    }
+                }
+            })
+            // 主题切换
+            document.querySelectorAll('.theme-toggle button').forEach(b=>{
+                b.onclick = ()=>{
+                    document.querySelectorAll('.theme-toggle button').forEach(x=>x.classList.remove('active'));
+                    b.classList.add('active');
+                    let t = b.dataset.theme;
+                    document.documentElement.setAttribute('data-theme', t);
+                    globalState.theme = t; saveState();
+                }
+            })
+            // 标签切换
+            document.querySelectorAll('.tab-btn').forEach(btn=>{
+                btn.onclick = ()=>{
+                    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+                    document.getElementById(btn.dataset.tab).classList.add('active');
+                }
+            })
+            // 子标签高低版本
+            document.querySelectorAll('.sub-tab-btn').forEach(b=>{
+                b.onclick = ()=>{
+                    document.querySelectorAll('.sub-tab-btn').forEach(x=>x.classList.remove('active'));
+                    b.classList.add('active');
+                    document.querySelectorAll('.sub-content').forEach(c=>c.classList.remove('active'));
+                    document.getElementById('sub-'+b.dataset.sub).classList.add('active');
+                }
+            })
+            // 回车触发推算
+            document.querySelectorAll('#mainInput input').forEach(inp=>{
+                inp.onkeydown = e=>{
+                    if(e.key==='Enter') document.getElementById('mainBtn').click();
+                }
+            })
+            // 复制全部收藏
+            document.getElementById('copyFav').onclick = ()=>{
+                copyText(globalState.favList.join('\n'));
+            }
+        }
+        initUI();
+    </script>
+</body>
+</html>
